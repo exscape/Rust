@@ -1,3 +1,4 @@
+/* Rust 0.11-pre, 20140413 */
 fn main() {
 	let max = 1000;
 
