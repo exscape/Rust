@@ -5,16 +5,19 @@
 if [ "$#" != "1" ]; then
 	echo "Use args!"
 	exit 1
+
 fi
+
+OPTS="-C prefer-dynamic -O"
 
 if [ exscape.rs -nt libexscape-*.rlib ];
 then
 	echo -n 'Rebuilding exscape.rs ... '
-	rustc --crate-type=lib exscape.rs || (echo 'Error compiling exscape.rs!'; exit 1)
+	rustc $OPTS --crate-type=lib exscape.rs || (echo 'Error compiling exscape.rs!'; exit 1)
 	[ $? != 0 ] && exit $?
 	echo 'done!'
 fi
 
 echo -n "Building $1 ... "
-rustc $1 -L . || (echo "Error compiling $1"; exit 1)
+rustc $OPTS $1 -L . || (echo "Error compiling $1"; exit 1)
 exit $?
