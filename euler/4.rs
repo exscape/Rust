@@ -5,20 +5,8 @@
  * not necessarily the biggest product.
  */
 
-fn is_palindrome(s: &str) -> bool {
-	let filtered : ~str = s.chars().filter_map(|c| {
-			match c.is_alphanumeric() {
-				true => Some(c.to_lowercase()),
-				false => None
-			}
-		}).collect();
-
-	filtered == filtered.chars_rev().collect()
-}
-
-fn is_palindrome_num(n: uint) -> bool {
-	is_palindrome(n.to_str())
-}
+extern crate exscape;
+use exscape::is_palindrome_num;
 
 fn main() {
 	// Yay, brute force!
