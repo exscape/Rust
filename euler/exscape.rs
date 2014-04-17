@@ -66,3 +66,20 @@ pub fn primes_up_to(n: uint) -> Vec<uint> {
 
 	primes
 }
+
+pub struct Fibonacci { prev: uint, cur: uint }
+
+impl Fibonacci {
+	pub fn new() -> Fibonacci {
+		Fibonacci { prev: 0, cur: 1 }
+	}
+}
+
+impl Iterator<uint> for Fibonacci {
+	fn next(&mut self) -> Option<uint> {
+		let tmp = self.cur;
+		self.cur += self.prev;
+		self.prev = tmp;
+		Some(self.cur)
+	}
+}
