@@ -16,5 +16,5 @@ then
 fi
 
 echo -n "Building $1 ... "
-rustc $1 -L .
-echo
+rustc $1 -L . || (echo "Error compiling $1"; exit 1)
+exit $?
