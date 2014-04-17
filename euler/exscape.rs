@@ -2,8 +2,8 @@
 
 extern crate std;
 
-pub fn factor(mut n: uint) -> ~[uint] {
-	let mut factors = ~[];
+pub fn factor(mut n: uint) -> Vec<uint> {
+	let mut factors : Vec<uint> = Vec::new();
 
 	let mut d : uint = 3;
 
@@ -33,10 +33,10 @@ pub fn factor(mut n: uint) -> ~[uint] {
 	return factors;
 }
 
-pub fn primes_up_to(n: uint) -> ~[uint] {
+pub fn primes_up_to(n: uint) -> Vec<uint> {
 	/* Sieve of Eratosthenes */
-	if n < 2 { return ~[]; }
-	let mut pvec = std::slice::from_elem(n, true);
+	if n < 2 { return Vec::new(); }
+	let mut pvec = Vec::from_elem(n, true);
 
 	/* If we do 2 as a special case, and then loop 3, 5, 7... by d += 2,
 	 * the program is not measurably faster even for n = 20 million!
@@ -47,23 +47,22 @@ pub fn primes_up_to(n: uint) -> ~[uint] {
 
 	let mut d = 2;
 	while d*d < n { /* while d < sqrt(n) */
-		if pvec[d] {
+		if *pvec.get(d) {
 			let mut j = d*d;
 			while j < n {
-				pvec[j] = false;
+				*pvec.get_mut(d) = false;
 				j += d;
 			}
 		}
 		d += 1;
 	}
 
-	let mut primes = ~[];
+	let mut primes = Vec::new();
 	for i in range(2, n) {
-		if pvec[i] {
+		if *pvec.get(i) {
 			primes.push(i);
 		}
 	}
 
 	primes
 }
-
