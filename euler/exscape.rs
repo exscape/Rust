@@ -13,7 +13,7 @@ pub fn factor(mut n: uint) -> Vec<uint> {
 			// start at 3 and do += 2 below, instead of testing
 			// 2, 3, 4, 5, 6, 7, 8 ... for no reason whatsoever.
 			factors.push(2);
-			n /= d;
+			n /= 2;
 		}
 
 		while n % d == 0 {
