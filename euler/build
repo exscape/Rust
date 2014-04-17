@@ -1,0 +1,20 @@
+#!/bin/bash
+#!/bin/bash
+
+
+if [ "$#" != "1" ]; then
+	echo "Use args!"
+	exit 1
+fi
+
+if [ exscape.rs -nt libexscape-*.rlib ];
+then
+	echo -n 'Rebuilding exscape.rs ... '
+	rustc --crate-type=lib exscape.rs || (echo 'Error compiling exscape.rs!'; exit 1)
+	[ $? != 0 ] && exit $?
+	echo 'done!'
+fi
+
+echo -n "Building $1 ... "
+rustc $1 -L .
+echo
