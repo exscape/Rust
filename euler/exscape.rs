@@ -3,6 +3,7 @@
 extern crate std;
 extern crate num;
 use num::bigint::{ToBigUint, BigUint};
+use std::num::pow;
 
 pub fn factor(mut n: uint) -> Vec<uint> {
 /* Prime factorization of a number; returns a sorted Vec e.g. [2, 2, 2, 3, 5] for n = 120 */
@@ -33,7 +34,7 @@ pub fn factor(mut n: uint) -> Vec<uint> {
 		}
 	}
 	
-	return factors;
+	factors
 }
 
 pub fn primes_up_to(n: uint) -> Vec<uint> {
@@ -160,4 +161,39 @@ pub fn fac(n: uint) -> BigUint {
 	}
 
 	result
+}
+
+/* Returns the sum of all proper divisors of a number; that is, all divisors except the number itself; e.g. f(12) = (1+2+3+4+6) = 16 */
+pub fn divisor_sum(n: uint) -> uint {
+	if n == 0 || n == 1 { return n; }
+
+	let pr : Vec<uint> = factor(n); /* prime factorization; sorted "automatically" by the algorithm */
+	if pr.len() == 1 { return 2; /* the prime factor itself plus being divisible by 1 */ }
+
+	/*
+	 * Algorithm: for prime factors x^a * y^b * z^c, there are (a+1)(b+1)(c+1) total divisors.
+	 * In other words, we need to find the number of times each prime factor is repeated, add one to each, and multiply those together.
+	 * 1080 = 2^3 * 3^3 * 5 would be represented as [2, 2, 2, 3, 3, 3, 5] here, and the result we want is then [3, 3, 1] -> 4 * 4 * 2 -> 32 divisors.
+	 */
+
+	let mut rep : Vec<Exp> = Vec::new();
+
+	struct Exp { base: uint, exp: uint }
+
+	let mut prev = 0;
+	let mut count = 0;
+
+	// Convert from [2, 2, 2, 3, 3, 5] style vectors to [2^3, 3^2, 5^1] style, using the above Exp struct
+	for &fact in pr.iter() {
+		if prev == fact || prev == 0 { count += 1; }
+		else { rep.push(Exp{base: prev, exp: count}); count = 1; }
+		prev = fact;
+	}
+	rep.push(Exp{base: prev, exp: count});
+
+	/*
+	 * Now we just need to calculate: divisor_sum = product of all (base^(exp+1) - 1)/(base-1),
+	 * and finally subtract n (as the above formula yields the sum of ALL divisors, the number itself included).
+	 */
+	rep.iter().map(|&x| (pow(x.base, x.exp + 1) - 1)/(x.base - 1)).fold(1, |a,b| a*b) - n
 }
