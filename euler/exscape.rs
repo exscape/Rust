@@ -1,6 +1,8 @@
 #![crate_id = "exscape#0.01"]
 
 extern crate std;
+extern crate num;
+use num::bigint::{ToBigUint, BigUint};
 
 pub fn factor(mut n: uint) -> Vec<uint> {
 /* Prime factorization of a number; returns a sorted Vec e.g. [2, 2, 2, 3, 5] for n = 120 */
@@ -143,4 +145,19 @@ pub fn num_divisors(n: uint) -> uint {
 
 	/* rep now stores [a, b, c], so we add one to each, and multiply them together, to find the answer. */
 	rep.iter().map(|x| x+1).fold(1, |a,b| a * b)
+}
+
+pub fn fac(n: uint) -> BigUint {
+	let one = BigUint::new(vec!(1));
+	if n == 0 { return BigUint::new(Vec::new()); }
+
+	let mut num = n.to_biguint().unwrap();
+	let mut result = 1u.to_biguint().unwrap();
+
+	while num > one  {
+		result = result * num;
+		num = num - one;
+	}
+
+	result
 }
