@@ -3,6 +3,7 @@
 extern crate std;
 
 pub fn factor(mut n: uint) -> Vec<uint> {
+/* Prime factorization of a number; returns a sorted Vec e.g. [2, 2, 2, 3, 5] for n = 120 */
 	let mut factors : Vec<uint> = Vec::new();
 
 	let mut d : uint = 3;
