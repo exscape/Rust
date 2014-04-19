@@ -20,6 +20,12 @@ pub fn factor(mut n: uint) -> Vec<uint> {
 	let mut factors : Vec<uint> = Vec::new();
 	let mut d : uint = 3;
 
+	if n < 2 {
+		/* Mathematica does it this way, so it should be OK enough. */
+		factors.push(n);
+		return factors;
+	}
+
 	while n > 1 {
 		while n % 2 == 0 {
 			// Special case for the only even prime, so that we can
@@ -113,7 +119,7 @@ impl Iterator<uint> for Fibonacci {
 		let tmp = self.cur;
 		self.cur += self.prev;
 		self.prev = tmp;
-		Some(self.cur)
+		Some(self.prev)
 	}
 }
 
@@ -254,7 +260,7 @@ pub fn divisor_sum(n: uint) -> uint {
 	if n == 0 || n == 1 { return n; }
 
 	let pr : Vec<uint> = factor(n); /* prime factorization; sorted "automatically" by the algorithm */
-	if pr.len() == 1 { return 2; /* the prime factor itself plus being divisible by 1 */ }
+	if pr.len() == 1 { return 1; /* since we exclude the number itself, the divisor sum is 1 for all primes */ }
 
 	/*
 	 * Algorithm: for prime factors x^a * y^b * z^c, there are (a+1)(b+1)(c+1) total divisors.
@@ -304,7 +310,9 @@ fn test_primes_up_to() {
 	assert_eq!(primes_up_to(2), vec!(2));
 	assert_eq!(primes_up_to(3), vec!(2, 3));
 	assert_eq!(primes_up_to(4), vec!(2, 3));
+	assert_eq!(primes_up_to(12), vec!(2, 3, 5, 7, 11));
 	assert_eq!(primes_up_to(13), vec!(2, 3, 5, 7, 11, 13));
+	assert_eq!(primes_up_to(14), vec!(2, 3, 5, 7, 11, 13));
 	assert_eq!(primes_up_to(23), vec!(2, 3, 5, 7, 11, 13, 17, 19, 23));
 }
 
