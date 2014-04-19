@@ -283,3 +283,111 @@ pub fn divisor_sum(n: uint) -> uint {
 	 */
 	rep.iter().map(|&x| (pow(x.base, x.exp + 1) - 1)/(x.base - 1)).fold(1, |a,b| a*b) - n
 }
+
+#[test]
+fn test_factor() {
+	for i in std::iter::range_inclusive(0u, 3) {
+		assert_eq!(factor(i), vec!(i));
+	}
+
+	assert_eq!(factor(4), vec!(2, 2));
+	assert_eq!(factor(5), vec!(5));
+	assert_eq!(factor(120), vec!(2, 2, 2, 3, 5));
+	assert_eq!(factor(121), vec!(11, 11));
+	assert_eq!(factor(127), vec!(127));
+}
+
+#[test]
+fn test_primes_up_to() {
+	assert_eq!(primes_up_to(0), Vec::new());
+	assert_eq!(primes_up_to(1), Vec::new());
+	assert_eq!(primes_up_to(2), vec!(2));
+	assert_eq!(primes_up_to(3), vec!(2, 3));
+	assert_eq!(primes_up_to(4), vec!(2, 3));
+	assert_eq!(primes_up_to(13), vec!(2, 3, 5, 7, 11, 13));
+	assert_eq!(primes_up_to(23), vec!(2, 3, 5, 7, 11, 13, 17, 19, 23));
+}
+
+#[test]
+fn test_fibonacci() {
+	let mut fib = Fibonacci::new();
+	assert!(fib.next().unwrap() == 1);
+	assert!(fib.next().unwrap() == 1);
+	assert!(fib.next().unwrap() == 2);
+	assert!(fib.next().unwrap() == 3);
+	assert!(fib.next().unwrap() == 5);
+	assert!(fib.next().unwrap() == 8);
+}
+
+#[test]
+fn test_is_palindrome() {
+	assert!(is_palindrome("Was it a car or a cat I saw?"));
+	assert!(is_palindrome("Rats live on no evil star"));
+	assert!(is_palindrome(r#"No "x" in "Nixon"#));
+	assert!(is_palindrome("123 21"));
+	assert!(!is_palindrome("123"));
+	assert!(!is_palindrome("Rust is awesome"));
+	assert!(!is_palindrome("Not a palindrome"));
+}
+
+#[test]
+fn test_is_palindrome_num() {
+	assert!(is_palindrome_num(0));
+	assert!(is_palindrome_num(1));
+	assert!(is_palindrome_num(101));
+	assert!(is_palindrome_num(492858294));
+	assert!(is_palindrome_num(9009));
+	assert!(!is_palindrome_num(10));
+	assert!(!is_palindrome_num(3523));
+	assert!(!is_palindrome_num(10010));
+	assert!(!is_palindrome_num(2940));
+}
+
+#[test]
+fn test_is_prime() {
+	assert!(!is_prime(0));
+	assert!(!is_prime(1));
+	assert!(!is_prime(4));
+	assert!(!is_prime(6));
+	assert!(!is_prime(121));
+	assert!(!is_prime(1299829));
+	assert!(is_prime(2));
+	assert!(is_prime(3));
+	assert!(is_prime(5));
+	assert!(is_prime(127));
+	assert!(is_prime(1299827));
+}
+
+#[test]
+fn test_num_divisors() {
+	assert_eq!(num_divisors(0), 0);
+	assert_eq!(num_divisors(1), 1);
+	assert_eq!(num_divisors(2), 2);
+	assert_eq!(num_divisors(3), 2);
+	assert_eq!(num_divisors(4), 3);
+	assert_eq!(num_divisors(12), 6);
+	assert_eq!(num_divisors(127), 2);
+}
+
+#[test]
+fn test_fac() {
+	assert_eq!(fac(0).to_u32().unwrap(), 1);
+	assert_eq!(fac(1).to_u32().unwrap(), 1);
+	assert_eq!(fac(2).to_u32().unwrap(), 2);
+	assert_eq!(fac(3).to_u32().unwrap(), 6);
+	assert_eq!(fac(10).to_u32().unwrap(), 3628800);
+	assert_eq!(fac(12).to_u32().unwrap(), 479001600);
+	assert_eq!(fac(15).to_u64().unwrap(), 1307674368000);
+}
+
+#[test]
+fn test_divisor_sum() {
+	assert_eq!(divisor_sum(0), 0);
+	assert_eq!(divisor_sum(1), 1);
+	assert_eq!(divisor_sum(2), 1);
+	assert_eq!(divisor_sum(3), 1);
+	assert_eq!(divisor_sum(4), 3);
+	assert_eq!(divisor_sum(6), 6);
+	assert_eq!(divisor_sum(12), 1+2+3+4+6);
+	assert_eq!(divisor_sum(127), 1);
+}
