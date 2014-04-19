@@ -1,5 +1,5 @@
-use exscape::math::primes_up_to;
-mod exscape;
+extern crate exscape;
+use exscape::primes_up_to;
 
 fn main() {
 	let max = 2000000;
