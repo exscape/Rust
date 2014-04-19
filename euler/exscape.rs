@@ -57,6 +57,7 @@ pub fn factor(mut n: uint) -> Vec<uint> {
 /// ```
 pub fn primes_up_to(n_in: uint) -> Vec<uint> {
 	/* Sieve of Eratosthenes */
+	let n = n_in + 1; /* better than using n+1 everywhere, at least; we need this to include `n` if `n` is prime. */
 	if n < 2 { return Vec::new(); }
 	let mut pvec = Vec::from_elem(n, true);
 
@@ -72,7 +73,7 @@ pub fn primes_up_to(n_in: uint) -> Vec<uint> {
 		if *pvec.get(d) {
 			let mut j = d*d;
 			while j < n {
-				*pvec.get_mut(d) = false;
+				*pvec.get_mut(j) = false;
 				j += d;
 			}
 		}
@@ -225,7 +226,7 @@ pub fn num_divisors(n: uint) -> uint {
 /// ```
 pub fn fac(n: uint) -> BigUint {
 	let one = BigUint::new(vec!(1));
-	if n == 0 { return BigUint::new(Vec::new()); }
+	if n == 0 || n == 1 { return one; } /* 0! == 1 by convention */
 
 	let mut num = n.to_biguint().unwrap();
 	let mut result = 1u.to_biguint().unwrap();
