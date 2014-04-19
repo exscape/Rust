@@ -1,13 +1,13 @@
 /* 2014-04-17, Rust 0.11-pre */
 
 extern crate exscape;
-use exscape::isprime;
+use exscape::is_prime;
 
 fn main() {
 	let mut count = 0;
 	let mut n = 2;
 	loop {
-		if isprime(n) {
+		if is_prime(n) {
 			count += 1;
 			if count == 10001 { break; }
 		}

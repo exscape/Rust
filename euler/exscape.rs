@@ -103,9 +103,9 @@ pub fn is_palindrome_num(n: uint) -> bool {
 	is_palindrome(n.to_str())
 }
 
-pub fn isprime(n: uint) -> bool {
-	if n > 2 && n % 2 == 0 { return false; }
-	else if n == 2 { return true; }
+pub fn is_prime(n: uint) -> bool {
+	if n == 2 { return true; }
+	else if n < 2 || (n > 2 && n % 2 == 0) { return false; }
 
 	let mut d = 3u;
 
