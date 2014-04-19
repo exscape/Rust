@@ -117,7 +117,7 @@ impl Iterator<uint> for Fibonacci {
 	}
 }
 
-/// Checks whether a string is a palindrome, testing only alphanumerics (ignoring case).
+/// Tests whether a string is a palindrome, testing only alphanumerics (ignoring case).
 ///
 /// # Example
 ///
@@ -137,7 +137,7 @@ pub fn is_palindrome(s: &str) -> bool {
 	filtered == filtered.chars_rev().collect()
 }
 
-/// Checks whether a uint is a palindrome.
+/// Tests whether a uint is a palindrome.
 ///
 /// # Example
 ///
@@ -221,7 +221,6 @@ pub fn num_divisors(n: uint) -> uint {
 /// # Example
 /// ```rust
 /// use exscape::fac;
-/// assert_eq!(fac(4).to_u64().unwrap(), 4*3*2*1);
 /// assert_eq!(fac(5).to_u64().unwrap(), 5*4*3*2*1);
 /// ```
 pub fn fac(n: uint) -> BigUint {
