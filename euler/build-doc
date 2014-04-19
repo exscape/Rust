@@ -1,0 +1,5 @@
+#!/bin/bash
+
+rustc --crate-type=lib exscape.rs && 
+rustdoc exscape.rs --test -L . && 
+rustdoc exscape.rs
