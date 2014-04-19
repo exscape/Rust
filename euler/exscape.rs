@@ -104,7 +104,7 @@ pub fn primes_up_to(n_in: uint) -> Vec<uint> {
 /// use exscape::Fibonacci;
 /// let fib = Fibonacci::new();
 /// let fibs : Vec<uint> = fib.take_while(|&c| c < 25).collect();
-/// assert_eq!(fibs, vec!(1, 2, 3, 5, 8, 13, 21));
+/// assert_eq!(fibs, vec!(1, 1, 2, 3, 5, 8, 13, 21));
 /// ```
 pub struct Fibonacci { prev: uint, cur: uint }
 
