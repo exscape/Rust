@@ -1,14 +1,23 @@
 #![crate_id = "exscape#0.01"]
 
+//! Various math functions.
+
 extern crate std;
 extern crate num;
 use num::bigint::{ToBigUint, BigUint};
 use std::num::pow;
 
+/// Prime factorize `n` and return the result as a `Vec<uint>` of (possibly repeated) factors.
+///
+/// # Example
+///
+/// ```rust
+/// use exscape::factor;
+/// let factors = factor(120);
+/// assert_eq!(factors, vec!(2, 2, 2, 3, 5));
+/// ```
 pub fn factor(mut n: uint) -> Vec<uint> {
-/* Prime factorization of a number; returns a sorted Vec e.g. [2, 2, 2, 3, 5] for n = 120 */
 	let mut factors : Vec<uint> = Vec::new();
-
 	let mut d : uint = 3;
 
 	while n > 1 {
@@ -37,7 +46,16 @@ pub fn factor(mut n: uint) -> Vec<uint> {
 	factors
 }
 
-pub fn primes_up_to(n: uint) -> Vec<uint> {
+/// Sieve of Eratosthenes. Returns a `Vec<uint>` of primes, up to and including `n`.
+///
+/// # Example
+///
+/// ```rust
+/// use exscape::primes_up_to;
+/// let primes = primes_up_to(11);
+/// assert_eq!(primes, vec!(2, 3, 5, 7, 11));
+/// ```
+pub fn primes_up_to(n_in: uint) -> Vec<uint> {
 	/* Sieve of Eratosthenes */
 	if n < 2 { return Vec::new(); }
 	let mut pvec = Vec::from_elem(n, true);
@@ -71,6 +89,16 @@ pub fn primes_up_to(n: uint) -> Vec<uint> {
 	primes
 }
 
+/// A Fibonacci number iterator/generator.
+///
+/// # Example
+///
+/// ```rust
+/// use exscape::Fibonacci;
+/// let fib = Fibonacci::new();
+/// let fibs : Vec<uint> = fib.take_while(|&c| c < 25).collect();
+/// assert_eq!(fibs, vec!(1, 2, 3, 5, 8, 13, 21));
+/// ```
 pub struct Fibonacci { prev: uint, cur: uint }
 
 impl Fibonacci {
@@ -88,6 +116,15 @@ impl Iterator<uint> for Fibonacci {
 	}
 }
 
+/// Checks whether a string is a palindrome, testing only alphanumerics (ignoring case).
+///
+/// # Example
+///
+/// ```rust
+/// use exscape::is_palindrome;
+/// assert_eq!(is_palindrome(&"Go hang a salami, I'm a lasagna hog!"), true);
+/// assert_eq!(is_palindrome(&"Hello, world!"), false);
+/// ```
 pub fn is_palindrome(s: &str) -> bool {
 	let filtered : ~str = s.chars().filter_map(|c| {
 			match c.is_alphanumeric() {
@@ -99,10 +136,29 @@ pub fn is_palindrome(s: &str) -> bool {
 	filtered == filtered.chars_rev().collect()
 }
 
+/// Checks whether a uint is a palindrome.
+///
+/// # Example
+///
+/// ```rust
+/// use exscape::is_palindrome_num;
+/// let nums : Vec<uint> = vec!(0, 1, 52925, 34, 5062);
+/// let results = nums.iter().map(|&n| is_palindrome_num(n)).collect::<Vec<bool>>();
+/// assert_eq!(results, vec!(true, true, true, false, false));
+/// ```
 pub fn is_palindrome_num(n: uint) -> bool {
 	is_palindrome(n.to_str())
 }
 
+/// Tests whether `n` is prime.
+///
+/// # Example
+/// ```rust
+/// use exscape::is_prime;
+/// let nums = vec!(1, 2, 3, 4, 5);
+/// let results = nums.iter().map(|&n| is_prime(n)).collect::<Vec<bool>>();
+/// assert_eq!(results, vec!(false, true, true, false, true));
+/// ```
 pub fn is_prime(n: uint) -> bool {
 	if n == 2 { return true; }
 	else if n < 2 || (n > 2 && n % 2 == 0) { return false; }
@@ -119,6 +175,17 @@ pub fn is_prime(n: uint) -> bool {
 	true
 }
 
+/// Returns the total number of divisors of `n`, including the number itself.
+///
+/// For the number of proper divisors, do `num_divisors(n) - 1`.
+///
+/// # Example
+/// ```rust
+/// use exscape::num_divisors;
+/// let nums : Vec<uint> = vec!(1, 2, 6, 10);
+/// let results = nums.iter().map(|&n| num_divisors(n)).collect::<Vec<uint>>();
+/// assert_eq!(results, vec!(1, 2, 4, 4));
+/// ```
 /* Returns the number of divisors of n, including 1 and the number itself. */
 pub fn num_divisors(n: uint) -> uint {
 	if n == 0 || n == 1 { return n; }
@@ -148,6 +215,14 @@ pub fn num_divisors(n: uint) -> uint {
 	rep.iter().map(|x| x+1).fold(1, |a,b| a * b)
 }
 
+/// Returns the factorial of `n`, `n!`, as a `BigUint`.
+///
+/// # Example
+/// ```rust
+/// use exscape::fac;
+/// assert_eq!(fac(4).to_u64().unwrap(), 4*3*2*1);
+/// assert_eq!(fac(5).to_u64().unwrap(), 5*4*3*2*1);
+/// ```
 pub fn fac(n: uint) -> BigUint {
 	let one = BigUint::new(vec!(1));
 	if n == 0 { return BigUint::new(Vec::new()); }
@@ -164,6 +239,17 @@ pub fn fac(n: uint) -> BigUint {
 }
 
 /* Returns the sum of all proper divisors of a number; that is, all divisors except the number itself; e.g. f(12) = (1+2+3+4+6) = 16 */
+/// Returns the sum of all proper divisors of a number.
+///
+/// The proper divisors are all divisors except the number itself.
+///
+/// # Example
+///
+/// ```rust
+/// use exscape::divisor_sum;
+/// let div_sum = divisor_sum(12);
+/// assert_eq!(div_sum, 1+2+3+4+6);
+/// ```
 pub fn divisor_sum(n: uint) -> uint {
 	if n == 0 || n == 1 { return n; }
 
