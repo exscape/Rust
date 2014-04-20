@@ -4,7 +4,6 @@ extern crate exscape;
 extern crate collections;
 use exscape::divisor_sum;
 use collections::hashmap::HashSet;
-use std::iter::AdditiveIterator;
 
 #[inline(always)]
 fn is_abundant(n: uint) -> bool {
