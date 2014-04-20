@@ -1,6 +1,6 @@
-use std::ptr::swap;
+use std::{fmt, str};
 
-/// Finds the next lexicographical permutation. 
+/// Mutates the vector to the next lexographical permutation.
 ///
 /// Returns `true` if successful, `false` if input is already at the last permutation.
 ///
@@ -14,14 +14,11 @@ use std::ptr::swap;
 /// assert_eq!(v, vec!(1, 0, 2);
 /// ```
 ///
-/// TODO: generic type
 /// TODO: trait on Vec<T> instead of function
 /// TODO: extensive testing
 /// TODO: clean up code
-/// TODO: test different types
-fn next_permutation(v: &mut Vec<uint>) -> bool {
+fn next_permutation<T : Ord>(v: &mut Vec<T>) -> bool {
 	if v.len() < 2 { return false; } /* there is only 1 permutation each for these cases, so we are at the last */
-
 
 	/* 
 	 * Step 1: 
@@ -81,6 +78,25 @@ fn test_permutations() {
 	assert_eq!(v, vec!(1, 2, 4, 5, 3));
 	next_permutation(&mut v);
 	assert_eq!(v, vec!(1, 2, 5, 3, 4));
+	// TODO: plenty of more tests, including empty, 1-length, 2-length etc. vectors of vastly different types
+}
+
+struct TestStruct { big: [uint, ..128], small: Option<uint> }
+
+impl Ord for TestStruct {
+	fn lt(&self, other: &TestStruct) -> bool {
+		return self.small.unwrap() < other.small.unwrap();
+	}
+}
+impl Eq for TestStruct {
+	fn eq(&self, other: &TestStruct) -> bool {
+		return self.small.unwrap() == other.small.unwrap();
+	}
+}
+impl fmt::Show for TestStruct {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		write!(f.buf, "{}", self.small.unwrap())
+	}
 }
 
 fn main() {
@@ -90,7 +106,27 @@ fn main() {
 
 	for _ in range(0, 999999) {
 		 next_permutation(&mut v);
-//		println!("PERMUTATION: {}", v);
 	}
+	assert_eq!(v, vec!(2, 7, 8, 3, 9, 1, 5, 4, 6, 0));
 	println!("{}", v);
+
+	let mut v2 : Vec<TestStruct> = Vec::new();
+
+	for i in range(0u, 3) {
+		v2.push(TestStruct { big: [0, ..128], small: Some(i) });
+	}
+
+	println!("Fat struct:");
+	println!("{}", v2);
+	while next_permutation(&mut v2) {
+		println!("{}", v2);
+	}
+
+	let s = "ABCD";
+	let mut t = s.chars().collect::<Vec<char>>();
+	println!("String:");
+	println!("{}", s);
+	while next_permutation(&mut t) {
+		println!("{}", str::from_chars(t.as_slice()));
+	}
 }
