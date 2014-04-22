@@ -1,6 +1,6 @@
 #![crate_id = "permutations#0.01"]
 
-//! Lexicographic permutations for `std::vec::Vec`.
+//! Lexicographic permutations for mutable slices.
 
 extern crate std;
 extern crate test;
@@ -11,92 +11,69 @@ extern crate test;
 //
 // TODO: prev_permutation
 // TODO: try to avoid code duplication in the above
-// TODO: trait on Vec<T> instead of function
 // TODO: extensive testing
-// TODO: clean up code
-//
 
-/*
-/// Mutates the vector to the next lexicographic permutation.
-///
-/// Returns `true` if successful, `false` if input is already at the last permutation. TODO
-///
-/// # Example
-///
-/// ```rust
-/// use permutations::next_permutation;
-/// let mut v = vec!(0, 1, 2);
-/// next_permutation(&mut v);
-/// assert_eq!(v, vec!(0, 2, 1));
-/// next_permutation(&mut v);
-/// assert_eq!(v, vec!(1, 0, 2));
-/// ```
-*/
-
-pub struct LexicographicPermutations<T> {
-	v: Vec<T>
+/// Trait implementing lexicographic permutations for mutable slices
+pub trait LexicographicPermutations<T: Ord> { 
+	fn next_permutation(&mut self) -> bool; 
 }
 
-trait LexicographicPermutationsTrait<T: Clone> { // TODO: rename
-	fn lexicographic_permutations(self) -> LexicographicPermutations<T>;
-}
+impl<'a, T: Ord> LexicographicPermutations<T> for &'a mut [T] { 
+	/// Mutates the slice to the next lexicographic permutation. TODO: this text is not visible in the docs
+	///
+	/// Returns `true` if successful, `false` if input is already at the last permutation.
+	///
+	/// # Example
+	///
+	/// ```rust
+	/// use permutations::LexicographicPermutations;
+	/// let mut v = &mut [0, 1, 2];
+	/// v.next_permutation();
+	/// assert_eq!(v.as_slice(), & [0, 2, 1]);
+	/// v.next_permutation();
+	/// assert_eq!(v.as_slice(), & [1, 0, 2]);
+	/// ```
+	fn next_permutation(&mut self) -> bool {
+		if self.len() < 2 { return false; } /* there is only 1 permutation each for these cases, so we are at the last */
 
-impl<'a, T: Clone + Ord> LexicographicPermutationsTrait<T> for &'a [T] {
-	fn lexicographic_permutations(self) -> LexicographicPermutations<T> {
-		LexicographicPermutations { v: Vec::from_slice(self) }
-	}
-}
+		/* 
+		 * Step 1: 
+		 * Find largest index i such that array[i−1] < array[i]. If no such index exists, the permutation is the last permutation.
+		 */
+		let mut last : bool = true;
 
-impl<T: Clone + Ord> Iterator<Vec<T>> for LexicographicPermutations<T> {
-	fn next(&mut self) -> Option<Vec<T>> {
-		let ret = self.v.clone();
-		match next_permutation(&mut self.v) {
-			true => Some(ret),
-		 	false => None // TODO: this misses the very last permutation
+		let mut i : uint = self.len() - 1;
+		while i > 0 {
+			if self[i - 1] < self[i] { last = false; break; }
+			i -= 1;
 		}
+
+		if last {
+			/* This is the last permutation. */
+			return false;
+		}
+
+		/*
+		 * Step 2:
+		 * Find largest index j such that j ≥ i and array[j] > array[i − 1].
+		 */
+		let mut j = self.len() - 1;
+		assert!(i > 0);
+		while j > 0 {
+			if self[j] > self[i-1] { break; }
+			j -= 1;
+		}
+
+		/* Step 3: Swap array[j] and array[i − 1]. */
+		self.swap(i-1, j);
+
+		/* Step 4: Reverse the suffix starting at array[i]. */
+		self.mut_slice_from(i).reverse();
+
+		true
 	}
 }
-
-pub fn next_permutation<T : Ord>(v: &mut Vec<T>) -> bool {
-	if v.len() < 2 { return false; } /* there is only 1 permutation each for these cases, so we are at the last */
-
-	/* 
-	 * Step 1: 
-     * Find largest index i such that array[i−1] < array[i]. If no such index exists, the permutation is the last permutation.
-	 */
-	let mut last : bool = true;
-
-	let mut i : uint = v.len() - 1;
-	while i > 0 {
-		if v.get(i - 1) < v.get(i) { last = false; break; }
-		i -= 1;
-	}
-
-	if last {
-		/* This is the last permutation. */
-		return false;
-	}
-
-	/*
-	 * Step 2:
-	 * Find largest index j such that j ≥ i and array[j] > array[i − 1].
-	 */
-	let mut j = v.len() - 1;
-	assert!(i > 0);
-	while j > 0 {
-		if v.get(j) > v.get(i-1) { break; }
-		j -= 1;
-	}
-
-	/* Step 3: Swap array[j] and array[i − 1]. */
-	v.as_mut_slice().swap(i-1, j);
-
-	/* Step 4: Reverse the suffix starting at array[i]. */
-	v.mut_slice_from(i).reverse();
-
-	true
-}
-
+/*
 #[test]
 fn test_permutations() {
 	/* Test simple permutations */
@@ -171,23 +148,30 @@ fn test_permutations() {
 }
 
 #[bench]
-fn bench_without_iterator(b: &mut test::test::Bencher) {
-	let mut v = vec!(0, 1, 2, 3, 4, 5, 6, 7);
-	b.iter(|| { while next_permutation(&mut v) { } });
+fn bench_without_iterator_small(b: &mut test::test::Bencher) {
+		let mut v = range(0u,10u).collect::<Vec<uint>>(); 
+		b.iter(|| { let mut i = 0; while i < 10000 { next_permutation(&mut v); i += 1; } });
+}
+
+#[bench]
+fn bench_without_iterator_big(b: &mut test::test::Bencher) {
+	let mut v = range(0u,1000000u).collect::<Vec<uint>>();
+	b.iter(|| { let mut i = 0; while i < 10000 { next_permutation(&mut v); i += 1; } });
 }
 
 #[bench]
 fn bench_with_iterator(b: &mut test::test::Bencher) {
-	let v = vec!(0, 1, 2, 3, 4, 5, 6, 7);
-	b.iter(|| { for _ in v.as_slice().lexicographic_permutations() { } });
+	let v = range(0u,10u).collect::<Vec<uint>>();
+	b.iter(|| { let mut i = 0; for _ in v.as_slice().lexicographic_permutations() { if i > 10000 { break; } i += 1; } });
 }
 
+*/
 #[allow(dead_code)]
 fn main() {
-	let mut v = vec!(1,2,3, 4, 5);
+	let mut v = &mut [1, 2, 3, 4, 5];
 
 	loop {
-		println!("{} ", v);
-		if !next_permutation(&mut v) { break; }
+		println!("{} ", v.as_slice());
+		if !v.next_permutation() { break; }
 	}
 }
