@@ -246,10 +246,9 @@ fn test_all_permutations(input: &mut &mut[int]) {
 	// This was designed as a test for prev_permutation, after it was known that
 	// next_permutation worked. It generates *and stores* all permutations of the input,
 	// in two ways, and verifies that they generate the same result.
-	// Only useable for inputs of length 10 or less, approximately. 
+	// Only usable for inputs of length 10 or less, approximately. 
 	// (That's 2*10! = 7.25 million permutations, each stored, each at least 80 bytes on 64-bit.)
 	// Length 11 would be 2*11! = 79.8 million, meaning at LEAST 2*11!*11*8 = 6.5 GiB RAM used.
-	// unshift() is probably the main reason it gets slow, however.
 	let mut x = Vec::from_slice(*input);
 	x.sort();
 	let mut y = x.clone(); y.reverse();
