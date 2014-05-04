@@ -153,6 +153,7 @@ pub fn is_palindrome(s: &str) -> bool {
 /// let results = nums.iter().map(|&n| is_palindrome_num(n)).collect::<Vec<bool>>();
 /// assert_eq!(results, vec!(true, true, true, false, false));
 /// ```
+#[inline]
 pub fn is_palindrome_num(n: uint) -> bool {
 	is_palindrome(n.to_str())
 }
@@ -321,6 +322,7 @@ pub fn digits(mut n: uint) -> Vec<uint> {
 /// assert_eq!(num_digits(0), 1);
 /// assert_eq!(num_digits(90400), 5);
 /// ```
+#[inline]
 pub fn num_digits(n: uint) -> uint {
 	if n < 10 { return 1; }
 	if n > std::num::pow(2u,53) { fail!("log() out of valid range; answer wouldn't be exact"); }
@@ -342,6 +344,7 @@ pub fn num_digits(n: uint) -> uint {
 /// assert_eq!(rotate_num(100), 10);
 /// assert_eq!(rotate_num(101), 110);
 /// ```
+#[inline]
 pub fn rotate_num(mut n: uint) -> uint {
 	if n < 10 { return n; }
 
@@ -363,6 +366,7 @@ pub fn rotate_num(mut n: uint) -> uint {
 /// assert_eq!(trunc_right(1001), 100);
 /// assert_eq!(trunc_right(9), 0);
 /// ```
+#[inline]
 pub fn trunc_right(n: uint) -> uint {
 	n / 10
 }
@@ -377,6 +381,7 @@ pub fn trunc_right(n: uint) -> uint {
 /// assert_eq!(trunc_left(1001), 1); // since 001 == 1
 /// assert_eq!(trunc_left(9), 0);
 /// ```
+#[inline]
 pub fn trunc_left(n: uint) -> uint {
 	n % std::num::pow(10u, num_digits(n) - 1)
 }
