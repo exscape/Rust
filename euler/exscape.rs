@@ -290,6 +290,28 @@ pub fn divisor_sum(n: uint) -> uint {
 	rep.iter().map(|&x| (pow(x.base, x.exp + 1) - 1)/(x.base - 1)).fold(1, |a,b| a*b) - n
 }
 
+/// Returns the digits of a number, in order.
+///
+/// # Example
+///
+/// ```rust
+/// use exscape::digits;
+/// let d = digits(12345);
+/// assert_eq!(d, vec!(1, 2, 3, 4, 5));
+/// ```
+pub fn digits(mut n: uint) -> Vec<uint> {
+	let mut out = Vec::new();
+
+	loop {
+		out.push(n % 10);
+		n /= 10;
+		if n == 0 { break; }
+	}
+
+	out.reverse();
+	out
+}
+
 #[test]
 fn test_factor() {
 	for i in std::iter::range_inclusive(0u, 3) {
@@ -398,4 +420,13 @@ fn test_divisor_sum() {
 	assert_eq!(divisor_sum(6), 6);
 	assert_eq!(divisor_sum(12), 1+2+3+4+6);
 	assert_eq!(divisor_sum(127), 1);
+}
+
+#[test]
+fn test_digits() {
+	assert_eq!(digits(0), vec!(0));
+	assert_eq!(digits(1), vec!(1));
+	assert_eq!(digits(10), vec!(1, 0));
+	assert_eq!(digits(99), vec!(9, 9));
+	assert_eq!(digits(194815), vec!(1, 9, 4, 8, 1, 5));
 }
