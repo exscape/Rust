@@ -129,8 +129,8 @@ impl Iterator<uint> for Fibonacci {
 ///
 /// ```rust
 /// use exscape::is_palindrome;
-/// assert_eq!(is_palindrome(&"Go hang a salami, I'm a lasagna hog!"), true);
-/// assert_eq!(is_palindrome(&"Hello, world!"), false);
+/// assert_eq!(is_palindrome("Go hang a salami, I'm a lasagna hog!"), true);
+/// assert_eq!(is_palindrome("Hello, world!"), false);
 /// ```
 pub fn is_palindrome(s: &str) -> bool {
 	let filtered : ~str = s.chars().filter_map(|c| {
