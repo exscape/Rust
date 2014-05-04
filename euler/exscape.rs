@@ -140,7 +140,7 @@ pub fn is_palindrome(s: &str) -> bool {
 			}
 		}).collect();
 
-	filtered == filtered.chars_rev().collect()
+	filtered == filtered.chars().rev().collect()
 }
 
 /// Tests whether a uint is a palindrome.
