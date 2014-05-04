@@ -140,8 +140,8 @@ fn test_all_permutations(input: &mut &mut[int]) {
 	let mut x = Vec::from_slice(*input);
 	x.sort();
 	let mut y = x.clone(); y.reverse();
-	let mut forward = x.as_mut_slice();
-	let mut backward = y.as_mut_slice();
+	let forward = x.as_mut_slice();
+	let backward = y.as_mut_slice();
 	let mut results_forward : Vec<Vec<int>> = Vec::new();
 	let mut results_backward : Vec<Vec<int>> = Vec::new();
 
@@ -175,6 +175,13 @@ fn bench_my_permutations_one_iter(b: &mut test::test::Bencher) {
 	let mut data : &mut[int] = &mut[0, 0, 0, 1, 1, 1, 3, 3, 4, 5, 6, 7, 8, 8, 9];
 	b.iter(|| { data.next_permutation(); });
 }
+
+#[bench]
+fn bench_my_permutations_one_iter_owned(b: &mut test::test::Bencher) {
+	let mut data : ~[int] = ~[0, 0, 0, 1, 1, 1, 3, 3, 4, 5, 6, 7, 8, 8, 9];
+	b.iter(|| { data.next_permutation(); });
+}
+
 
 #[bench]
 fn bench_rust_permutations_one_iter(b: &mut test::test::Bencher) {
