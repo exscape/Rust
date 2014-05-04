@@ -312,6 +312,75 @@ pub fn digits(mut n: uint) -> Vec<uint> {
 	out
 }
 
+/// Returns the number of digits of `n` (log10(n) + 1, though 0 is a special case).
+///
+/// # Example
+///
+/// ```rust
+/// use exscape::num_digits;
+/// assert_eq!(num_digits(0), 1);
+/// assert_eq!(num_digits(90400), 5);
+/// ```
+pub fn num_digits(n: uint) -> uint {
+	if n < 10 { return 1; }
+	if n > std::num::pow(2u,53) { fail!("log() out of valid range; answer wouldn't be exact"); }
+
+	1 + (n as f64).log10() as uint
+}
+
+/// Rotates a number, moving the last digit to the first place.
+///
+/// Note that e.g. 10 rotates to 1, as the leading zero is ignored.
+/// This also implies that rotating a n-digit number n times isn't guaranteed
+/// to produce the original number.
+///
+/// # Example
+///
+/// ```rust
+/// use exscape::rotate_num;
+/// assert_eq!(rotate_num(123), 312);
+/// assert_eq!(rotate_num(100), 10);
+/// assert_eq!(rotate_num(101), 110);
+/// ```
+pub fn rotate_num(mut n: uint) -> uint {
+	if n < 10 { return n; }
+
+	// fetch last digit
+	let last = n % 10;
+	// remove it
+	n /= 10;
+	// add it back in front, and return
+	n + last * std::num::pow(10u, num_digits(n))
+}
+
+/// Truncate a number from the right. 1-digit numbers truncate to 0.
+///
+/// # Example
+///
+/// ```rust
+/// use exscape::trunc_right;
+/// assert_eq!(trunc_right(123), 12);
+/// assert_eq!(trunc_right(1001), 100);
+/// assert_eq!(trunc_right(9), 0);
+/// ```
+pub fn trunc_right(n: uint) -> uint {
+	n / 10
+}
+
+/// Truncate a number from the left. 1-digit numbers truncate to 0.
+///
+/// # Example
+///
+/// ```rust
+/// use exscape::trunc_left;
+/// assert_eq!(trunc_left(123), 23);
+/// assert_eq!(trunc_left(1001), 1); // since 001 == 1
+/// assert_eq!(trunc_left(9), 0);
+/// ```
+pub fn trunc_left(n: uint) -> uint {
+	n % std::num::pow(10u, num_digits(n) - 1)
+}
+
 #[test]
 fn test_factor() {
 	for i in std::iter::range_inclusive(0u, 3) {
@@ -429,4 +498,65 @@ fn test_digits() {
 	assert_eq!(digits(10), vec!(1, 0));
 	assert_eq!(digits(99), vec!(9, 9));
 	assert_eq!(digits(194815), vec!(1, 9, 4, 8, 1, 5));
+}
+
+#[test]
+fn test_num_digits() {
+	assert_eq!(num_digits(0), 1);
+	assert_eq!(num_digits(1), 1);
+	assert_eq!(num_digits(9), 1);
+	assert_eq!(num_digits(10), 2);
+	assert_eq!(num_digits(11), 2);
+	assert_eq!(num_digits(19), 2);
+	assert_eq!(num_digits(20), 2);
+	assert_eq!(num_digits(21), 2);
+	assert_eq!(num_digits(99), 2);
+	assert_eq!(num_digits(99), 2);
+	assert_eq!(num_digits(100), 3);
+	assert_eq!(num_digits(101), 3);
+	assert_eq!(num_digits(104900), 6);
+}
+
+#[test]
+fn test_rotate_num() {
+	assert_eq!(rotate_num(0), 0);
+	assert_eq!(rotate_num(1), 1);
+	assert_eq!(rotate_num(9), 9);
+	assert_eq!(rotate_num(10), 1);
+	assert_eq!(rotate_num(100), 10);
+	assert_eq!(rotate_num(101), 110);
+	assert_eq!(rotate_num(197), 719);
+	assert_eq!(rotate_num(719), 971);
+}
+
+#[test]
+fn test_trunc_right() {
+	assert_eq!(trunc_right(0), 0);
+	assert_eq!(trunc_right(1), 0);
+	assert_eq!(trunc_right(9), 0);
+	assert_eq!(trunc_right(10), 1);
+	assert_eq!(trunc_right(11), 1);
+	assert_eq!(trunc_right(19), 1);
+	assert_eq!(trunc_right(20), 2);
+	assert_eq!(trunc_right(21), 2);
+	assert_eq!(trunc_right(29), 2);
+	assert_eq!(trunc_right(12000), 1200);
+	assert_eq!(trunc_right(12001), 1200);
+	assert_eq!(trunc_right(12345), 1234);
+}
+
+#[test]
+fn test_trunc_left() {
+	assert_eq!(trunc_left(0), 0);
+	assert_eq!(trunc_left(1), 0);
+	assert_eq!(trunc_left(9), 0);
+	assert_eq!(trunc_left(10), 0);
+	assert_eq!(trunc_left(11), 1);
+	assert_eq!(trunc_left(19), 9);
+	assert_eq!(trunc_left(20), 0);
+	assert_eq!(trunc_left(21), 1);
+	assert_eq!(trunc_left(29), 9);
+	assert_eq!(trunc_left(12000), 2000);
+	assert_eq!(trunc_left(12001), 2001);
+	assert_eq!(trunc_left(12345), 2345);
 }
