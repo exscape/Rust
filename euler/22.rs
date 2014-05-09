@@ -10,7 +10,7 @@ fn main() {
 	let mut reader = BufferedReader::new(reader);
 	let s : ~str = reader.read_to_str().unwrap();
 
-	let mut names = s.split(',').map(|s| s.trim_chars(&'"')).collect::<Vec<&str>>();
+	let mut names = s.split(',').map(|s| s.trim_chars('"')).collect::<Vec<&str>>();
 	names.sort();
 
 	/* pos is 0-indexed, so we need to add 1; similarly, 'A' - 'A' is 0, so we need to add 1 there, too */
