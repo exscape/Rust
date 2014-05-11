@@ -1,11 +1,6 @@
+extern crate exscape;
+use exscape::is_pentagonal;
 use std::iter::range_step;
-
-fn is_pentagonal(num: uint) -> bool {
-	// If (sqrt(24x+1)+1) / 6 is an integer, x is pentagonal.
-	let f = num as f64;
-	let n = ((24.0 * f + 1.0).sqrt() + 1.0)/6.0;
-	 n == n.trunc()
-}
 
 fn main() {
 	// Strategy: Generate increasing pentagonals numbers P_n in an outer loop,
