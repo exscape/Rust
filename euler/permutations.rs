@@ -20,7 +20,7 @@ use rand::{task_rng, Rng};
 /// // Note: To print *all* permutations, the input must be in lexicographical order to begin with.
 /// loop {
 ///     println!("{}", v);
-///     if !v.next_permutation() { break; }
+///     if !v.next_permutation2() { break; }
 /// }
 ///
 /// ```
@@ -34,12 +34,12 @@ pub trait LexicographicPermutations<T: Ord> {
 	/// ```rust
 	/// use permutations::LexicographicPermutations;
 	/// let mut v = &mut [0, 1, 2];
-	/// v.next_permutation();
+	/// v.next_permutation2();
 	/// assert_eq!(v, &mut [0, 2, 1]);
-	/// v.next_permutation();
+	/// v.next_permutation2();
 	/// assert_eq!(v, &mut [1, 0, 2]);
 	/// ```
-	fn next_permutation(&mut self) -> bool;
+	fn next_permutation2(self) -> bool;
 
 	/// Mutates the slice to the previous lexicographic permutation.
 	///
@@ -50,20 +50,20 @@ pub trait LexicographicPermutations<T: Ord> {
 	/// ```rust
 	/// use permutations::LexicographicPermutations;
 	/// let mut v = &mut [1, 0, 2];
-	/// v.prev_permutation();
+	/// v.prev_permutation2();
 	/// assert_eq!(v, &mut [0, 2, 1]);
-	/// v.prev_permutation();
+	/// v.prev_permutation2();
 	/// assert_eq!(v, &mut [0, 1, 2]);
 	/// ```
-	fn prev_permutation(&mut self) -> bool;
+	fn prev_permutation2(self) -> bool;
 }
 
 impl<'a, T: Ord> LexicographicPermutations<T> for &'a mut [T] {
-	fn next_permutation(&mut self) -> bool {
+	fn next_permutation2(self) -> bool {
 		// These cases only have 1 permutation each, so we can't do anything.
 		if self.len() < 2 { return false; }
 
-		// Step 1: Identify the longest, rightmost weakly decreasing part of the vector.
+		// Step 1: Identify the longest, rightmost weakly decreasing part of the vector
 		let mut i = self.len() - 1;
 		while i > 0 && self[i-1] >= self[i] {
 			i -= 1;
@@ -80,20 +80,20 @@ impl<'a, T: Ord> LexicographicPermutations<T> for &'a mut [T] {
 			j -= 1;
 		}
 
-		// Step 3: Swap that element with the pivot.
+		// Step 3: Swap that element with the pivot
 		self.swap(j, i-1);
 
-		// Step 4: Reverse the weakly decreasing part.
+		// Step 4: Reverse the weakly decreasing part
 		self.mut_slice_from(i).reverse();
 
 		true
 	}
 
-	fn prev_permutation(&mut self) -> bool {
+	fn prev_permutation2(self) -> bool {
 		// These cases only have 1 permutation each, so we can't do anything.
 		if self.len() < 2 { return false; }
 
-		// Step 1: Identify the longest, rightmost weakly increasing part of the vector.
+		// Step 1: Identify the longest, rightmost weakly increasing part of the vector
 		let mut i = self.len() - 1;
 		while i > 0 && self[i-1] <= self[i] {
 			i -= 1;
@@ -104,7 +104,7 @@ impl<'a, T: Ord> LexicographicPermutations<T> for &'a mut [T] {
 			return false;
 		}
 
-		// Step 2: Reverse the weakly increasing part.
+		// Step 2: Reverse the weakly increasing part
 		self.mut_slice_from(i).reverse();
 
 		// Step 3: Find the rightmost element equal to or bigger than the pivot (i-1)
@@ -113,7 +113,7 @@ impl<'a, T: Ord> LexicographicPermutations<T> for &'a mut [T] {
 			j -= 1;
 		}
 
-		// Step 4: Swap that element with the pivot.
+		// Step 4: Swap that element with the pivot
 		self.swap(i-1, j);
 
 		true
@@ -121,127 +121,61 @@ impl<'a, T: Ord> LexicographicPermutations<T> for &'a mut [T] {
 }
 
 #[test]
-fn test_permutations_int() {
+fn test_lexicographic_permutations_int() {
 	/* Test simple permutations */
 	let mut v : &mut[int] = &mut[1, 2, 3, 4, 5];
-	assert!(v.prev_permutation() == false);
-	assert!(v.next_permutation());
+	assert!(v.prev_permutation2() == false);
+	assert!(v.next_permutation2());
 	assert_eq!(v, &mut[1, 2, 3, 5, 4]);
-	assert!(v.prev_permutation());
+	assert!(v.prev_permutation2());
 	assert_eq!(v, &mut[1, 2, 3, 4, 5]);
-	assert!(v.next_permutation());
-	assert!(v.next_permutation());
+	assert!(v.next_permutation2());
+	assert!(v.next_permutation2());
 	assert_eq!(v, &mut[1, 2, 4, 3, 5]);
-	assert!(v.next_permutation());
+	assert!(v.next_permutation2());
 	assert_eq!(v, &mut[1, 2, 4, 5, 3]);
 
 	let mut v: &mut[int] = &mut[1, 0, 0, 0];
-	assert!(v.next_permutation() == false);
-	assert!(v.prev_permutation());
+	assert!(v.next_permutation2() == false);
+	assert!(v.prev_permutation2());
 	assert_eq!(v, &mut[0, 1, 0, 0]);
-	assert!(v.prev_permutation());
+	assert!(v.prev_permutation2());
 	assert_eq!(v, &mut[0, 0, 1, 0]);
-	assert!(v.prev_permutation());
+	assert!(v.prev_permutation2());
 	assert_eq!(v, &mut[0, 0, 0, 1]);
-	assert!(v.prev_permutation() == false);
+	assert!(v.prev_permutation2() == false);
 }
 
 #[test]
-fn test_permutations_empty_and_short() {
+fn test_lexicographic_permutations_empty_and_short() {
 	/* Test 0-length, 1-length and 2-length slices */
 	let mut empty : &mut[int] = &mut[];
-	assert!(empty.next_permutation() == false);
+	assert!(empty.next_permutation2() == false);
 	assert_eq!(empty, &mut[]);
-	assert!(empty.prev_permutation() == false);
+	assert!(empty.prev_permutation2() == false);
 	assert_eq!(empty, &mut[]);
 
-	let mut small : &mut[int] = &mut[1, 2];
+	let mut one_elem : &mut[int] = &mut[4];
+	assert!(one_elem.prev_permutation2() == false);
+	assert_eq!(one_elem, &mut[4]);
+	assert!(one_elem.next_permutation2() == false);
+	assert_eq!(one_elem, &mut[4]);
 
-	assert!(small.prev_permutation() == false);
-	assert_eq!(small, &mut[1, 2]);
-	assert!(small.next_permutation());
-	assert_eq!(small, &mut[2, 1]);
-	assert!(small.next_permutation() == false);
-	assert_eq!(small, &mut[2, 1]);
-	assert!(small.prev_permutation());
-	assert_eq!(small, &mut[1, 2]);
-	assert!(small.prev_permutation() == false);
-	assert_eq!(small, &mut[1, 2]);
+	let mut two_elem : &mut[int] = &mut[1, 2];
+	assert!(two_elem.prev_permutation2() == false);
+	assert_eq!(two_elem, &mut[1, 2]);
+	assert!(two_elem.next_permutation2());
+	assert_eq!(two_elem, &mut[2, 1]);
+	assert!(two_elem.next_permutation2() == false);
+	assert_eq!(two_elem, &mut[2, 1]);
+	assert!(two_elem.prev_permutation2());
+	assert_eq!(two_elem, &mut[1, 2]);
+	assert!(two_elem.prev_permutation2() == false);
+	assert_eq!(two_elem, &mut[1, 2]);
 }
 
-#[test]
-fn test_permutations_custom_type() {
-	/* Test a custom struct (w/ nonsense contents) */
-	struct TS { big: [uint, ..4], small: Option<uint> }
-	impl Ord for TS {
-		fn lt(&self, other: &TS) -> bool {
-			return self.small.unwrap() < other.small.unwrap();
-		}
-	}
-	impl Eq for TS {
-		fn eq(&self, other: &TS) -> bool {
-			return self.small.unwrap() == other.small.unwrap();
-		}
-	}
-	impl std::fmt::Show for TS {
-		fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-			write!(f.buf, "{}", self.small.unwrap())
-		}
-	}
+// Code below this line is just development-focused test code, not intended to be committed.
 
-	let mut tmp : Vec<TS> = Vec::new();
-
-	for i in range(0u, 3) {
-		tmp.push(TS { big: [i, ..4], small: Some(i) });
-	}
-
-	let mut v2 : &mut[TS] = tmp.as_mut_slice();
-
-	assert!(v2.prev_permutation() == false);
-	assert!(v2.next_permutation());
-	assert_eq!(v2, &mut[TS{ big: [0, ..4], small: Some(0) }, TS{ big: [0, ..4], small: Some(2) }, TS{ big: [0, ..4], small: Some(1) }]);
-
-	assert!(v2.prev_permutation());
-	assert_eq!(v2, &mut[TS{ big: [0, ..4], small: Some(0) }, TS{ big: [0, ..4], small: Some(1) }, TS{ big: [0, ..4], small: Some(2) }]);
-
-	assert!(v2.next_permutation());
-	assert_eq!(v2, &mut[TS{ big: [0, ..4], small: Some(0) }, TS{ big: [0, ..4], small: Some(2) }, TS{ big: [0, ..4], small: Some(1) }]);
-	assert!(v2.next_permutation());
-	assert_eq!(v2, &mut[TS{ big: [0, ..4], small: Some(1) }, TS{ big: [0, ..4], small: Some(0) }, TS{ big: [0, ..4], small: Some(2) }]);
-}
-
-#[test]
-fn test_euler_24() {
-	// Project euler #24
-	let mut v : &mut[int] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-	for _ in range(0, 999999) {
-		 v.next_permutation();
-	}
-	assert_eq!(v, &mut[2, 7, 8, 3, 9, 1, 5, 4, 6, 0]);
-}
-
-#[test]
-fn test_string() {
-	let s = "ABCD";
-	let mut tmp = s.chars().collect::<Vec<char>>();
-	let mut t = tmp.as_mut_slice();
-	assert!(t.prev_permutation() == false);
-	assert!(t.next_permutation());
-	assert_eq!(t, &mut['A', 'B', 'D', 'C']);
-	assert!(t.prev_permutation());
-	assert_eq!(t, &mut['A', 'B', 'C', 'D']);
-	assert!(t.next_permutation());
-	assert_eq!(t, &mut['A', 'B', 'D', 'C']);
-	assert!(t.next_permutation());
-	assert_eq!(t, &mut['A', 'C', 'B', 'D']);
-	assert!(t.next_permutation());
-	assert_eq!(t, &mut['A', 'C', 'D', 'B']);
-	assert!(t.prev_permutation());
-	assert_eq!(t, &mut['A', 'C', 'B', 'D']);
-}
-
-//#[test]
 fn test_all_permutations(input: &mut &mut[int]) {
 	// This was designed as a test for prev_permutation, after it was known that
 	// next_permutation worked. It generates *and stores* all permutations of the input,
@@ -259,12 +193,12 @@ fn test_all_permutations(input: &mut &mut[int]) {
 
 	loop {
 		results_forward.push(Vec::from_slice(forward));
-		if !forward.next_permutation() { break; }
+		if !forward.next_permutation2() { break; }
 	}
 
 	loop {
 		results_backward.push(Vec::from_slice(backward));
-		if !backward.prev_permutation() { break; }
+		if !backward.prev_permutation2() { break; }
 	}
 
 	results_backward.reverse();
@@ -273,23 +207,23 @@ fn test_all_permutations(input: &mut &mut[int]) {
 }
 
 #[bench]
-fn bench_my_permutations_bulk(b: &mut test::test::Bencher) {
-	b.iter(|| { let mut data : &mut[int] = &mut[0, 1, 2, 3, 4, 5, 6]; while data.next_permutation() { } });
+fn bench_lexicographic_permutations_bulk(b: &mut test::test::Bencher) {
+	b.iter(|| { let mut data : &mut[int] = &mut[0, 1, 2, 3, 4, 5, 6]; while data.next_permutation2() { } });
 }
 
 #[bench]
-fn bench_rust_permutations_bulk(b: &mut test::test::Bencher) {
+fn bench_iterated_permutations_bulk(b: &mut test::test::Bencher) {
 	b.iter(|| {	let mut data : &mut[int] = &mut[0, 1, 2, 3, 4, 5, 6]; for _ in data.permutations() { } } );
 }
 
 #[bench]
-fn bench_my_permutations_one_iter(b: &mut test::test::Bencher) {
+fn bench_lexicographic_permutations_one_iter(b: &mut test::test::Bencher) {
 	let mut data : &mut[int] = &mut[0, 0, 0, 1, 1, 1, 3, 3, 4, 5, 6, 7, 8, 8, 9];
-	b.iter(|| { data.next_permutation(); });
+	b.iter(|| { data.next_permutation2(); });
 }
 
 #[bench]
-fn bench_rust_permutations_one_iter(b: &mut test::test::Bencher) {
+fn bench_iterated_permutations_one_iter(b: &mut test::test::Bencher) {
 	let mut data : &mut[int] = &mut[0, 0, 0, 1, 1, 1, 3, 3, 4, 5, 6, 7, 8, 8, 9];
 	let mut p = data.permutations();
 	b.iter(|| {	p.next(); });
@@ -314,5 +248,9 @@ fn infinite_loop_random_test() {
 }
 
 fn main() {
-	infinite_loop_random_test();
+    let mut x = ~[1i,2,3];
+    loop {
+        println!("{}", x);
+        if !x.next_permutation2() { break; }
+    }
 }
