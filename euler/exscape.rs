@@ -356,6 +356,13 @@ pub fn rotate_num(mut n: uint) -> uint {
 	n + last * std::num::pow(10u, num_digits(n))
 }
 
+/// Returns `true` if `num` contains each digit from 1 to `n` exactly once.
+pub fn is_pandigital(num: uint) -> bool {
+	let mut v = digits(num);
+	v.sort();
+	v == range(1, num_digits(num) + 1).collect::<Vec<uint>>()
+}
+
 /// Truncate a number from the right. 1-digit numbers truncate to 0.
 ///
 /// # Example
@@ -384,6 +391,29 @@ pub fn trunc_right(n: uint) -> uint {
 #[inline]
 pub fn trunc_left(n: uint) -> uint {
 	n % std::num::pow(10u, num_digits(n) - 1)
+}
+
+/// Returns whether `num` is triangular, i.e. whether it can be written as n*(n+1)/2 for integer `n`.
+pub fn is_triangular(n: uint) -> bool {
+	// If and only if 8n + 1 is a square, n is a triangular number.
+	let root = ((8*n + 1) as f64).sqrt() as uint;
+	root*root == 8*n + 1
+}
+
+/// Returns whether `num` is pentagonal, i.e. whether it can be written as n*(3n-1)/2 for integer `n`.
+pub fn is_pentagonal(num: uint) -> bool {
+	// If (sqrt(24x+1)+1) / 6 is an integer, x is pentagonal.
+	let f = num as f64;
+	let n = ((24.0 * f + 1.0).sqrt() + 1.0)/6.0;
+	 n == n.trunc()
+}
+
+/// Returns whether `num` is hexagonal, i.e. whether it can be written as n*(2n-1) for integer `n`.
+pub fn is_hexagonal(num: uint) -> bool {
+	// If (sqrt(8x+1) + 1) / 4 is an integer, x is hexagonal.
+	let f = num as f64;
+	let n = ((8.0 * f + 1.0).sqrt() + 1.0)/4.0;
+	 n == n.trunc()
 }
 
 #[test]
@@ -564,4 +594,19 @@ fn test_trunc_left() {
 	assert_eq!(trunc_left(12000), 2000);
 	assert_eq!(trunc_left(12001), 2001);
 	assert_eq!(trunc_left(12345), 2345);
+}
+
+#[test]
+fn test_is_pandigital() {
+	assert_eq!(is_pandigital(12345), true);
+	assert_eq!(is_pandigital(12344), false);
+	assert_eq!(is_pandigital(1), true);
+	assert_eq!(is_pandigital(2), false);
+	assert_eq!(is_pandigital(12), true);
+	assert_eq!(is_pandigital(13), false);
+	assert_eq!(is_pandigital(120), false);
+	assert_eq!(is_pandigital(987654321), true);
+	assert_eq!(is_pandigital(197246583), true);
+	assert_eq!(is_pandigital(54316), false);
+	assert_eq!(is_pandigital(54316), false);
 }
