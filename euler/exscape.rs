@@ -416,6 +416,18 @@ pub fn is_hexagonal(num: uint) -> bool {
 	 n == n.trunc()
 }
 
+/// Returns `true` if `n1` and `n2` are permutations of each other, i.e. made up of the same digits.
+///
+/// Leading zeroes are ignored, so while 1230 and 1203 are considered permutations of each other, 1230 and 0123 are not.
+pub fn is_permutation(n1: uint, n2: uint) -> bool {
+	let mut v1 = digits(n1);
+	let mut v2 = digits(n2);
+	v1.sort();
+	v2.sort();
+
+	v1 == v2
+}
+
 #[test]
 fn test_factor() {
 	for i in std::iter::range_inclusive(0u, 3) {
