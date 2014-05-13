@@ -4,8 +4,11 @@
 
 extern crate std;
 extern crate num;
+extern crate gmp;
 use num::bigint::{ToBigUint, BigUint};
 use std::num::pow;
+use std::iter::range_inclusive;
+use gmp::Mpz;
 
 /// Prime factorize `n` and return the result as a `Vec<uint>` of (possibly repeated) factors.
 ///
@@ -426,6 +429,20 @@ pub fn is_permutation(n1: uint, n2: uint) -> bool {
 	v2.sort();
 
 	v1 == v2
+}
+
+/// A factorial using GMP's Mpz type, whose size is limited only by memory usage.
+///
+/// For example, calculating fac_mpz(1000) is not a problem, despite it being over 2500 digits.
+pub fn fac_mpz(n_in: uint) -> Mpz {
+	if n_in <= 1 { return std::num::one(); }
+
+	let mut prod : Mpz = std::num::one();
+	for i in range_inclusive(2u64, n_in as u64) {
+		prod = prod * FromPrimitive::from_u64(i).unwrap();
+	}
+
+	prod
 }
 
 #[test]

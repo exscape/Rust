@@ -11,7 +11,7 @@ OPTS="-O"
 if [ exscape.rs -nt libexscape-*.rlib ];
 then
 	echo -n 'Rebuilding exscape.rs ... '
-	rustc $OPTS --crate-type=lib exscape.rs || (echo 'Error compiling exscape.rs!'; exit 1)
+	rustc $OPTS --crate-type=lib exscape.rs -L . || (echo 'Error compiling exscape.rs!'; exit 1)
 	[ $? != 0 ] && exit $?
 	echo 'done!'
 fi
