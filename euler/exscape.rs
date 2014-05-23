@@ -5,6 +5,7 @@
 extern crate std;
 extern crate num;
 extern crate gmp;
+extern crate test;
 use num::bigint::{ToBigUint, BigUint};
 use std::num::pow;
 use std::iter::range_inclusive;
@@ -158,7 +159,7 @@ pub fn is_palindrome(s: &str) -> bool {
 /// ```
 #[inline]
 pub fn is_palindrome_num(n: uint) -> bool {
-	is_palindrome(n.to_str())
+	reverse_num(n) == n
 }
 
 /// Tests whether `n` is prime.
@@ -443,6 +444,37 @@ pub fn fac_mpz(n_in: uint) -> Mpz {
 	}
 
 	prod
+}
+
+/// Reverses a number. Note that leading zeroes are ignored, so 120 reversed is just 21.
+pub fn reverse_num(mut n: uint) -> uint {
+	// Using digits().iter().rev().collect() and converting back to uint would be easier,
+	// but also almost certainly slower.
+
+	let mut rev = 0;
+	let len = num_digits(n);
+
+	for i in range(0, len) {
+		rev += (n % 10) * std::num::pow(10u, len - i - 1);
+		n /= 10;
+	}
+
+	rev
+}
+
+#[test]
+fn test_reverse_num() {
+	assert_eq!(reverse_num(0), 0);
+	assert_eq!(reverse_num(1), 1);
+	assert_eq!(reverse_num(9), 9);
+	assert_eq!(reverse_num(10), 01);
+	assert_eq!(reverse_num(11), 11);
+	assert_eq!(reverse_num(12), 21);
+	assert_eq!(reverse_num(98), 89);
+	assert_eq!(reverse_num(123), 321);
+	assert_eq!(reverse_num(1230), 0321);
+	assert_eq!(reverse_num(1203), 3021);
+	assert_eq!(reverse_num(3458295), 5928543);
 }
 
 #[test]
