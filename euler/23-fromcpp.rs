@@ -6,7 +6,7 @@
 use std::iter::range_step;
 
 fn main() {
-	let N : uint = 28123;
+	static N : uint = 28123;
 
 	let mut d = [0u, ..28123];
 	let mut abundant = Vec::new();

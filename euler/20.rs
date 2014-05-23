@@ -6,5 +6,5 @@ use exscape::fac;
 
 fn main() {
 	let num = fac(100);
-	println!("Answer: {}", num.to_str().chars().map(|c| c.to_digit(10).unwrap()).sum());
+	println!("Answer: {}", num.to_str().as_slice().chars().map(|c| c.to_digit(10).unwrap()).sum());
 }

@@ -11,7 +11,7 @@ fn main() {
 
 	for line in reader.lines() {
 		let line = line.unwrap();
-		buf.push_str(line.trim());
+		buf.push_str(line.as_slice().trim());
 	}
 
 	/* OK, so we can finally get to work. */

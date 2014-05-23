@@ -11,5 +11,5 @@ fn main() {
 	}
 
 	let sum_str = sum.to_str();
-	println!("{}", sum_str.slice_from(sum_str.len() - 10));
+	println!("{}", sum_str.as_slice().slice_from(sum_str.len() - 10));
 }

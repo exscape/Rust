@@ -137,14 +137,14 @@ impl Iterator<uint> for Fibonacci {
 /// assert_eq!(is_palindrome("Hello, world!"), false);
 /// ```
 pub fn is_palindrome(s: &str) -> bool {
-	let filtered : ~str = s.chars().filter_map(|c| {
+	let filtered : StrBuf = s.chars().filter_map(|c| {
 			match c.is_alphanumeric() {
 				true => Some(c.to_lowercase()),
 				false => None
 			}
 		}).collect();
 
-	filtered == filtered.chars().rev().collect()
+	filtered == filtered.as_slice().chars().rev().collect()
 }
 
 /// Tests whether a uint is a palindrome.

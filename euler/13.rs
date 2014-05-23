@@ -14,8 +14,8 @@ fn main() {
 
 	for line in reader.lines() {
 		let line = line.unwrap();
-		sum = sum + from_str(line.trim()).unwrap();
+		sum = sum + from_str(line.as_slice().trim()).unwrap();
 	}
 
-	println!("Answer: {}", sum.to_str().slice_to(10));
+	println!("Answer: {}", sum.to_str().as_slice().slice_to(10));
 }

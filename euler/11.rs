@@ -18,7 +18,7 @@ fn main() {
 		/* Split into numbers, convert each part into an int using from_str(), collect them into a Vec<int> and push it. */
 		/* from_str(s) works as well as from_str::<int>(s) but is less clear. */
 
-		v.push(line.trim().split(' ').map(|s| from_str::<int>(s).unwrap()).collect::<Vec<int>>());
+		v.push(line.as_slice().trim().split(' ').map(|s| from_str::<int>(s).unwrap()).collect::<Vec<int>>());
 	}
 
 	/*

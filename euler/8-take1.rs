@@ -12,10 +12,8 @@ fn main() {
 
 	for line in reader.lines() {
 		let line = line.unwrap();
-		let line = line.trim();
-		buf.push_str(line);
+		buf.push_str(line.as_slice().trim());
 	}
-	let s = buf.into_owned();
 
 	/* OK, so we can finally get to work. */
 	let mut max : uint = 0;
@@ -23,7 +21,7 @@ fn main() {
 		// Start at position i, multiply s[i+0] * s[i+1] ... * s[i+4]
 		let mut n : uint = 1;
 		for j in range(0u, 5u) {
-			n *= (s[i+j] - '0' as u8) as uint; /* TODO: use something more idiomatic than ASCII subtraction */
+			n *= (buf.as_slice()[i+j] - '0' as u8) as uint; /* TODO: use something more idiomatic than ASCII subtraction */
 		}
 		if n > max { max = n }
 	}

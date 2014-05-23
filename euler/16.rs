@@ -6,5 +6,5 @@ use std::iter::AdditiveIterator;
 
 fn main() {
 	let num = std::num::pow(2u.to_biguint().unwrap(), 1000);
-	println!("Answer: {}", num.to_str().chars().map(|c| c.to_digit(10).unwrap()).sum());
+	println!("Answer: {}", num.to_str().as_slice().chars().map(|c| c.to_digit(10).unwrap()).sum());
 }
