@@ -1,13 +1,12 @@
 use std::path::Path;
 use std::io::fs::File;
 use std::io::BufferedReader;
-use std::strbuf::StrBuf;
 use std::iter::range_inclusive;
 
 fn main() {
 	let reader = File::open(&Path::new("8.txt")).unwrap();
 	let mut reader = BufferedReader::new(reader);
-	let mut buf = StrBuf::new();
+	let mut buf = String::new();
 
 	for line in reader.lines() {
 		let line = line.unwrap();

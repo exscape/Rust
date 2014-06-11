@@ -8,7 +8,7 @@ use std::iter::AdditiveIterator;
 fn main() {
 	let reader = File::open(&Path::new("22.txt")).unwrap();
 	let mut reader = BufferedReader::new(reader);
-	let s : StrBuf = reader.read_to_str().unwrap();
+	let s : String = reader.read_to_str().unwrap();
 
 	let mut names = s.as_slice().split(',').map(|s| s.trim_chars('"')).collect::<Vec<&str>>();
 	names.sort();

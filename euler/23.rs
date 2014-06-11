@@ -1,9 +1,8 @@
 /* 2014-04-19, Rust 0.11-pre-nightly */
 
 extern crate exscape;
-extern crate collections;
 use exscape::divisor_sum;
-use collections::hashmap::HashSet;
+use std::collections::hashmap::HashSet;
 
 #[inline(always)]
 fn is_abundant(n: uint) -> bool {

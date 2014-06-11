@@ -137,7 +137,7 @@ impl Iterator<uint> for Fibonacci {
 /// assert_eq!(is_palindrome("Hello, world!"), false);
 /// ```
 pub fn is_palindrome(s: &str) -> bool {
-	let filtered : StrBuf = s.chars().filter_map(|c| {
+	let filtered : String = s.chars().filter_map(|c| {
 			match c.is_alphanumeric() {
 				true => Some(c.to_lowercase()),
 				false => None

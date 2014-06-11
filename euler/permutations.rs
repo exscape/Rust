@@ -6,8 +6,7 @@ extern crate std;
 extern crate test;
 
 /* for testing only */
-extern crate rand;
-use rand::{task_rng, Rng};
+use std::rand::{task_rng, Rng};
 
 /// Trait implementing lexicographic permutations for mutable slices
 ///

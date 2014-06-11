@@ -5,14 +5,14 @@ use std::io::fs::File;
 use std::io::BufferedReader;
 
 fn is_palindrome(s: &str) -> bool {
-	let filtered : ~str = s.chars().filter_map(|c| {
+	let filtered : String = s.as_slice().chars().filter_map(|c| {
 			match c.is_alphanumeric() {
 				true => Some(c.to_lowercase()),
 				false => None
 			}
 		}).collect();
 
-	filtered == filtered.chars().rev().collect()
+	filtered == filtered.as_slice().chars().rev().collect()
 }
 
 fn main() {
@@ -22,7 +22,7 @@ fn main() {
 
 	for line in reader.lines() {
 		let line = line.unwrap();
-		let line = line.trim();
+		let line = line.as_slice().trim();
 		println!("{} for {}", is_palindrome(line), line);
 	}
 }
